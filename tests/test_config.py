@@ -2,6 +2,7 @@ import os
 
 
 def test_env_vars():
+    print(list(os.environ.values()))
     assert 'sqlite:///db.sqlite3' in list(os.environ.values()), (
         'Проверьте наличие переменной окружения с настройками для подключения'
         ' базы данных со значением sqlite:///db.sqlite3'
