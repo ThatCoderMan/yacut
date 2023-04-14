@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime
 
 from flask import url_for
@@ -10,6 +11,10 @@ class URLMap(db.Model):
     original = db.Column(db.String(256), nullable=False, unique=True)
     short = db.Column(db.String(16), nullable=False, unique=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.errors = defaultdict(list)
 
     def to_dict(self):
         return dict(url=self.original, short_link=url_for(
