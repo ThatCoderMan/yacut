@@ -2,12 +2,10 @@ import re
 from http import HTTPStatus
 
 from flask import jsonify, request
-from settings import SHORT_URL_LENGTH
 
 from . import app, db
 from .error_handler import InvalidAPIUsage
 from .models import URLMap
-from .views import get_unique_short_id
 
 
 @app.route('/api/id/<string:short_id>/', methods=['GET'])
@@ -19,21 +17,20 @@ def get_url(short_id):
 
 
 def get_api_url_map(original_link: str, custom_id: str) -> URLMap:
-    custom_id = custom_id or get_unique_short_id(SHORT_URL_LENGTH)
-
-    if len(custom_id) > 16:
+    url_map = URLMap(original=original_link, short=custom_id)
+    if len(url_map.short) > 16:
         raise InvalidAPIUsage('Указано недопустимое имя для короткой ссылки')
-    if re.match(r"^[A-Za-z0-9]+$", custom_id) is None:
+    if re.match(r"^[A-Za-z0-9]+$", url_map.short) is None:
         raise InvalidAPIUsage('Указано недопустимое имя для короткой ссылки')
-    if URLMap.query.filter_by(short=custom_id).first() is not None:
-        raise InvalidAPIUsage(f'Имя "{custom_id}" уже занято.')
+    if URLMap.query.filter_by(short=url_map.short).first() is not None:
+        raise InvalidAPIUsage(f'Имя "{url_map.short}" уже занято.')
 
-    if not original_link:
+    if not url_map.original:
         raise InvalidAPIUsage('"url" является обязательным полем!')
-    if URLMap.query.filter_by(original=original_link).first() is not None:
-        raise InvalidAPIUsage(f'Имя "{original_link}" уже занято.')
+    if URLMap.query.filter_by(original=url_map.original).first() is not None:
+        raise InvalidAPIUsage(f'Имя "{url_map.original}" уже занято.')
 
-    return URLMap(original=original_link, short=custom_id)
+    return url_map
 
 
 @app.route('/api/id/', methods=['POST'])
