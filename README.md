@@ -42,6 +42,5 @@ pip install -r requirements.txt
 ```commandline
 flask run
 ```
----
 ## Автор проекта
 - [Artemii Berezin](https://github.com/ThatCoderMan)
