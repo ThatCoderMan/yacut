@@ -37,4 +37,4 @@ def redirect_view(custom_id):
     custom_id = URLMap.query.filter_by(short=custom_id).first()
     if custom_id:
         return redirect(custom_id.original)
-    abort(HTTPStatus.NOT_FOUND)
+    return abort(HTTPStatus.NOT_FOUND)

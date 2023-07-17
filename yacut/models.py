@@ -4,8 +4,8 @@ from datetime import datetime
 from random import choice
 
 from flask import url_for
-from settings import SHORT_URL_LENGTH
 
+from settings import SHORT_URL_LENGTH
 from yacut import db
 
 
